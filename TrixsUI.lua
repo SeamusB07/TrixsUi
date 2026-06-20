@@ -29,7 +29,7 @@ function TrixUI.new(config)
 
     -- Slightly wider to accommodate better spacing
     self.mainFrame = Instance.new("Frame")
-    self.mainFrame.Size = UDim2.new(0, 280, 0, 340)
+    self.mainFrame.Size = UDim2.new(0, 480, 0, 340)
     self.mainFrame.Position = UDim2.new(0.5, -140, 0.5, -170)
     self.mainFrame.BackgroundColor3 = Theme.Background
     self.mainFrame.BorderSizePixel = 0
