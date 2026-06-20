@@ -341,6 +341,106 @@ function Window:CreateTab(title)
             callback(currentValue)
         end
 
+        function Tab:Dropdown(text, options, callback)
+            local isOpen = false
+            local currentSelection = text -- Default text shown
+            
+            -- 1.Base Frame
+            local dropDownContainer = Instance.new("Frame")
+            dropDownContainer.Size = UDim2.new(1, 0, 0, 34)
+            dropDownContainer.BackgroundColor3 = Theme.Elements
+            dropDownContainer.BorderSizePixel = 0
+            Instance.new("UICorner", dropDownContainer).CornerRadius = UDim.new(0,8)
+            dropDownContainer.LayoutOrder = tabData.layoutOrder
+            dropDownContainer.Parent = page
+
+            -- 2. Options List Container
+            local optionsList = Instance.new("Frame")
+            optionsList.Size = UDim2.new(1, 0, 0, 0)
+            optionsList.AutomaticSize = Enum.AutomaticSize.Y
+            optionsList.BackgroundColor3 = Theme.Elements
+            optionsList.Visible = false
+            optionsList.LayoutOrder = tabData.layoutOrder + 0.1
+            optionsList.Parent = page
+
+            --3 UIlistlayout
+            local optionLayout = Instance.new("UIListLayout")
+            optionLayout.Padding = UDim.new(0,4)
+            optionLayout.Parent = optionsList
+
+            local label = Instance.new("TextLabel")
+            label.Size = UDim2.new(1, -24, 0, 24)
+            label.Position = UDim2.new(0, 14, 0, 2)
+            label.BackgroundTransparency = 1
+            label.Text = currentSelection
+            label.TextColor3 = Theme.Text
+            label.TextXAlignment = Enum.TextXAlignment.Left
+            label.Font = Enum.Font.Gotham
+            label.TextSize = 12
+            label.Parent = dropDownContainer
+
+            local arrow = Instance.new("TextLabel")
+            arrow.Size = UDim2.new(0, 30, 1, 0) -- 30 pixels wide, fill height
+            arrow.Position = UDim2.new(1, -30, 0, 0) -- Glued to the right edge
+            arrow.BackgroundTransparency = 1
+            arrow.Text = "▼"
+            arrow.TextColor3 = Theme.MutedText
+            arrow.Font = Enum.Font.GothamBold
+            arrow.TextSize = 12
+            arrow.Parent = dropDownContainer
+
+                        -- 3 & 4. Loop through options and create buttons
+            for i, optionName in pairs(options) do
+                local optionBtn = Instance.new("TextButton")
+                optionBtn.Size = UDim2.new(1, 0, 0, 28) 
+                optionBtn.BackgroundColor3 = Theme.Elements
+                optionBtn.BorderSizePixel = 0
+                optionBtn.Text = optionName
+                optionBtn.TextColor3 = Theme.Text
+                optionBtn.Font = Enum.Font.Gotham
+                optionBtn.TextSize = 12
+                Instance.new("UICorner", optionBtn).CornerRadius = UDim.new(0, 6)
+                optionBtn.Parent = optionsList
+                
+                -- The Click Event for each option
+                optionBtn.MouseButton1Click:Connect(function()
+                    -- 1. Update the text on the main label
+                    label.Text = optionName 
+                    currentSelection = optionName
+                    
+                    -- 2. Fire the callback to tell the script what was chosen
+                    callback(optionName)
+                    
+                    -- 3. Close the menu
+                    optionsList.Visible = false
+                    isOpen = false
+                    arrow.Text = "▼"
+                end)
+            end
+
+            -- 5. Toggle logic on the Base Container click
+            -- (We use an invisible button over the whole container so it's clickable)
+            local clickDetector = Instance.new("TextButton")
+            clickDetector.Size = UDim2.new(1, 0, 1, 0)
+            clickDetector.BackgroundTransparency = 1
+            clickDetector.Text = ""
+            clickDetector.Parent = dropDownContainer
+
+            clickDetector.MouseButton1Click:Connect(function()
+                isOpen = not isOpen
+                
+                if isOpen then
+                    optionsList.Visible = true
+                    arrow.Text = "▲"
+                else
+                    optionsList.Visible = false
+                    arrow.Text = "▼"
+                end
+            end)
+
+        end -- End of Tab:Dropdown
+
+
         thumb.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 isDraggingSlider = true
