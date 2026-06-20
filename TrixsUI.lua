@@ -45,7 +45,7 @@ function TrixUI.new(config)
 
     -- FIX: Title text is locked to max 120px wide and truncates with "..." if too long
     local titleText = Instance.new("TextLabel")
-    titleText.Size = UDim2.new(0, 120, 1, 0)
+    titleText.Size = UDim2.new(0, 180, 1, 0)
     titleText.Position = UDim2.new(0, 16, 0, 0)
     titleText.BackgroundTransparency = 1
     titleText.Text = config.Name or "TrixUI"
