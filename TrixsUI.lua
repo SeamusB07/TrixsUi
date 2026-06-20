@@ -1,5 +1,19 @@
--- TrixUI Library
--- Pure UI logic. No game-specific code here.
+-- ==========================================
+-- TRIXUI LIBRARY (MODERN DARK EDITION)
+-- ==========================================
+
+-- 1. THEME CONFIGURATION (Change these to instantly restyle the whole UI!)
+local Theme = {
+    Background = Color3.fromRGB(20, 20, 22),     -- Rich Black
+    Topbar = Color3.fromRGB(15, 15, 17),         -- Darker Black
+    Elements = Color3.fromRGB(30, 30, 34),       -- Soft Dark Gray
+    Accent = Color3.fromRGB(0, 195, 255),        -- Vibrant Cyan
+    AccentHover = Color3.fromRGB(50, 215, 255),  -- Lighter Cyan (For hovering)
+    Text = Color3.fromRGB(230, 230, 235),        -- Soft White
+    MutedText = Color3.fromRGB(130, 130, 140),   -- Muted Gray
+    ToggleOff = Color3.fromRGB(60, 60, 65)       -- Dark Gray
+}
+
 local TrixUI = {}
 TrixUI.__index = TrixUI
 
@@ -15,33 +29,35 @@ function TrixUI.new(config)
     self.screenGui.ResetOnSpawn = false
     self.screenGui.Parent = game:GetService("CoreGui")
 
+    -- Main Container
     self.mainFrame = Instance.new("Frame")
-    self.mainFrame.Size = UDim2.new(0, 250, 0, 300)
-    self.mainFrame.Position = UDim2.new(0.5, -125, 0.5, -150)
-    self.mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    self.mainFrame.Size = UDim2.new(0, 260, 0, 320)
+    self.mainFrame.Position = UDim2.new(0.5, -130, 0.5, -160)
+    self.mainFrame.BackgroundColor3 = Theme.Background
     self.mainFrame.BorderSizePixel = 0
     self.mainFrame.Parent = self.screenGui
-    Instance.new("UICorner", self.mainFrame).CornerRadius = UDim.new(0, 8)
+    Instance.new("UICorner", self.mainFrame).CornerRadius = UDim.new(0, 10)
 
+    -- Top Bar
     local titleBar = Instance.new("Frame")
-    titleBar.Size = UDim2.new(1, 0, 0, 40)
-    titleBar.BackgroundColor3 = Color3.fromRGB(84, 101, 255)
+    titleBar.Size = UDim2.new(1, 0, 0, 42)
+    titleBar.BackgroundColor3 = Theme.Topbar
     titleBar.BorderSizePixel = 0
     titleBar.Parent = self.mainFrame
-    Instance.new("UICorner", titleBar).CornerRadius = UDim.new(0, 8)
+    Instance.new("UICorner", titleBar).CornerRadius = UDim.new(0, 10)
 
     local titleText = Instance.new("TextLabel")
     titleText.Size = UDim2.new(0.5, 0, 1, 0)
-    titleText.Position = UDim2.new(0, 10, 0, 0)
+    titleText.Position = UDim2.new(0, 14, 0, 0)
     titleText.BackgroundTransparency = 1
     titleText.Text = config.Name or "TrixUI"
-    titleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleText.TextColor3 = Theme.Text
     titleText.TextXAlignment = Enum.TextXAlignment.Left
     titleText.Font = Enum.Font.GothamBold
-    titleText.TextSize = 16
+    titleText.TextSize = 15
     titleText.Parent = titleBar
 
-    -- Tab Buttons Container (Sits in the top right of the title bar)
+    -- Tab Holder
     self.tabHolder = Instance.new("Frame")
     self.tabHolder.Size = UDim2.new(0.5, -80, 1, 0)
     self.tabHolder.Position = UDim2.new(0.5, 0, 0, 0)
@@ -51,39 +67,40 @@ function TrixUI.new(config)
     local tabLayout = Instance.new("UIListLayout")
     tabLayout.FillDirection = Enum.FillDirection.Horizontal
     tabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
-    tabLayout.Padding = UDim.new(0, 5)
+    tabLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    tabLayout.Padding = UDim.new(0, 4)
     tabLayout.Parent = self.tabHolder
 
-    -- Content Container (Where tab pages go)
+    -- Content Container
     self.contentContainer = Instance.new("Frame")
-    self.contentContainer.Size = UDim2.new(1, -20, 1, -50)
-    self.contentContainer.Position = UDim2.new(0, 10, 0, 45)
+    self.contentContainer.Size = UDim2.new(1, -24, 1, -52)
+    self.contentContainer.Position = UDim2.new(0, 12, 0, 46)
     self.contentContainer.BackgroundTransparency = 1
     self.contentContainer.ClipsDescendants = true
     self.contentContainer.Parent = self.mainFrame
 
     -- Window Controls
     local minimizeButton = Instance.new("TextButton")
-    minimizeButton.Size = UDim2.new(0, 30, 0, 30)
-    minimizeButton.Position = UDim2.new(1, -65, 0, 5)
-    minimizeButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    minimizeButton.Size = UDim2.new(0, 28, 0, 28)
+    minimizeButton.Position = UDim2.new(1, -64, 0, 7)
+    minimizeButton.BackgroundColor3 = Theme.Elements
     minimizeButton.BorderSizePixel = 0
-    minimizeButton.Text = "_"
-    minimizeButton.TextColor3 = Color3.fromRGB(84, 101, 255)
+    minimizeButton.Text = "—"
+    minimizeButton.TextColor3 = Theme.MutedText
     minimizeButton.Font = Enum.Font.GothamBold
-    minimizeButton.TextSize = 18
+    minimizeButton.TextSize = 14
     minimizeButton.Parent = titleBar
     Instance.new("UICorner", minimizeButton).CornerRadius = UDim.new(0, 6)
 
     local closeButton = Instance.new("TextButton")
-    closeButton.Size = UDim2.new(0, 30, 0, 30)
-    closeButton.Position = UDim2.new(1, -32, 0, 5)
+    closeButton.Size = UDim2.new(0, 28, 0, 28)
+    closeButton.Position = UDim2.new(1, -32, 0, 7)
     closeButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
     closeButton.BorderSizePixel = 0
     closeButton.Text = "X"
     closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     closeButton.Font = Enum.Font.GothamBold
-    closeButton.TextSize = 14
+    closeButton.TextSize = 12
     closeButton.Parent = titleBar
     Instance.new("UICorner", closeButton).CornerRadius = UDim.new(0, 6)
 
@@ -91,13 +108,13 @@ function TrixUI.new(config)
     minimizeButton.MouseButton1Click:Connect(function()
         isMinimized = not isMinimized
         self.contentContainer.Visible = not isMinimized
-        self.mainFrame.Size = isMinimized and UDim2.new(0, 250, 0, 40) or UDim2.new(0, 250, 0, 300)
-        minimizeButton.Text = isMinimized and "+" or "_"
+        self.mainFrame.Size = isMinimized and UDim2.new(0, 260, 0, 42) or UDim2.new(0, 260, 0, 320)
+        minimizeButton.Text = isMinimized and "+" or "—"
     end)
 
     closeButton.MouseButton1Click:Connect(function() self.screenGui:Destroy() end)
 
-    -- Dragging Logic
+    -- Dragging
     local dragging, dragStart, startPos
     titleBar.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -121,91 +138,103 @@ function TrixUI.new(config)
 end
 
 function Window:CreateTab(title)
-    -- Hide all existing tabs first
     for _, tab in pairs(self.tabs) do
         tab.page.Visible = false
-        tab.btn.BackgroundColor3 = Color3.fromRGB(60, 75, 200) -- Inactive color
+        tab.btn.TextColor3 = Theme.MutedText
+        tab.btn.BackgroundTransparency = 1
     end
 
-    -- Create Tab Button
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, 50, 0, 25)
-    btn.Position = UDim2.new(1, -60, 0, 7)
-    btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- Active color
+    btn.Size = UDim2.new(0, 50, 0, 24)
+    btn.BackgroundColor3 = Theme.Accent
+    btn.BackgroundTransparency = 0
     btn.BorderSizePixel = 0
     btn.Text = title
-    btn.TextColor3 = Color3.fromRGB(84, 101, 255)
+    btn.TextColor3 = Theme.Background
     btn.Font = Enum.Font.GothamBold
     btn.TextSize = 11
     btn.Parent = self.tabHolder
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
 
-    -- Create Tab Page (Scrolling Frame)
     local page = Instance.new("ScrollingFrame")
     page.Size = UDim2.new(1, 0, 1, 0)
     page.BackgroundTransparency = 1
-    page.ScrollBarThickness = 4
-    page.ScrollBarImageColor3 = Color3.fromRGB(84, 101, 255)
+    page.ScrollBarThickness = 3
+    page.ScrollBarImageColor3 = Theme.Elements
     page.CanvasSize = UDim2.new(0, 0, 0, 0)
     page.AutomaticCanvasSize = Enum.AutomaticSize.Y
     page.Visible = true
     page.Parent = self.contentContainer
 
+    -- INCREASED PADDING FOR BETTER SPACING
     local listLayout = Instance.new("UIListLayout")
-    listLayout.Padding = UDim.new(0, 10)
+    listLayout.Padding = UDim.new(0, 12) 
     listLayout.SortOrder = Enum.SortOrder.LayoutOrder
     listLayout.Parent = page
 
     local tabData = {btn = btn, page = page, layoutOrder = 0}
     table.insert(self.tabs, tabData)
 
-    -- Tab Switching Logic
     btn.MouseButton1Click:Connect(function()
         for _, t in pairs(self.tabs) do
             t.page.Visible = false
-            t.btn.BackgroundColor3 = Color3.fromRGB(60, 75, 200)
-            t.btn.TextColor3 = Color3.fromRGB(150, 150, 200)
+            t.btn.TextColor3 = Theme.MutedText
+            t.btn.BackgroundTransparency = 1
         end
         page.Visible = true
-        btn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        btn.TextColor3 = Color3.fromRGB(84, 101, 255)
+        btn.TextColor3 = Theme.Background
+        btn.BackgroundTransparency = 0
     end)
 
-    -- Return Tab Class
+    -- Tab Elements Class
     local Tab = {}
     Tab.__index = Tab
     setmetatable(Tab, {__index = function(_, key) return tabData[key] end})
 
     function Tab:Section(text)
         tabData.layoutOrder = tabData.layoutOrder + 1
-        local sectionLabel = Instance.new("TextLabel")
-        sectionLabel.Size = UDim2.new(1, 0, 0, 25)
-        sectionLabel.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-        sectionLabel.BorderSizePixel = 0
-        sectionLabel.Text = text
-        sectionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-        sectionLabel.Font = Enum.Font.GothamBold
-        sectionLabel.TextSize = 13
-        sectionLabel.TextXAlignment = Enum.TextXAlignment.Left
-        sectionLabel.LayoutOrder = tabData.layoutOrder
-        sectionLabel.Parent = page
-        Instance.new("UICorner", sectionLabel).CornerRadius = UDim.new(0, 5)
-        Instance.new("UIPadding", sectionLabel).PaddingLeft = UDim.new(0, 10)
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(1, 0, 0, 26)
+        frame.BackgroundColor3 = Theme.Elements
+        frame.BorderSizePixel = 0
+        frame.LayoutOrder = tabData.layoutOrder
+        frame.Parent = page
+        Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 5)
+
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, -12, 1, 0)
+        label.Position = UDim2.new(0, 12, 0, 0)
+        label.BackgroundTransparency = 1
+        label.Text = text
+        label.TextColor3 = Theme.MutedText
+        label.Font = Enum.Font.GothamBold
+        label.TextSize = 12
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        label.Parent = frame
     end
 
     function Tab:Button(text, callback)
         tabData.layoutOrder = tabData.layoutOrder + 1
         local button = Instance.new("TextButton")
-        button.Size = UDim2.new(1, 0, 0, 35)
-        button.BackgroundColor3 = Color3.fromRGB(84, 101, 255)
+        button.Size = UDim2.new(1, 0, 0, 36)
+        button.BackgroundColor3 = Theme.Accent
         button.BorderSizePixel = 0
         button.Text = text
-        button.TextColor3 = Color3.fromRGB(255, 255, 255)
-        button.Font = Enum.Font.GothamSemibold
-        button.TextSize = 14
+        button.TextColor3 = Theme.Background
+        button.Font = Enum.Font.GothamBold
+        button.TextSize = 13
         button.LayoutOrder = tabData.layoutOrder
         button.Parent = page
-        Instance.new("UICorner", button).CornerRadius = UDim.new(0, 6)
+        Instance.new("UICorner", button).CornerRadius = UDim.new(0, 7)
+
+        -- Modern Hover Effect
+        button.MouseEnter:Connect(function()
+            button.BackgroundColor3 = Theme.AccentHover
+        end)
+        button.MouseLeave:Connect(function()
+            button.BackgroundColor3 = Theme.Accent
+        end)
+
         button.MouseButton1Click:Connect(function() callback(button) end)
     end
 
@@ -213,35 +242,35 @@ function Window:CreateTab(title)
         tabData.layoutOrder = tabData.layoutOrder + 1
         local toggled = default
         local frame = Instance.new("Frame")
-        frame.Size = UDim2.new(1, 0, 0, 30)
-        frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        frame.Size = UDim2.new(1, 0, 0, 32)
+        frame.BackgroundColor3 = Theme.Elements
         frame.BorderSizePixel = 0
         frame.LayoutOrder = tabData.layoutOrder
         frame.Parent = page
-        Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 6)
+        Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 7)
 
         local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, -50, 1, 0)
-        label.Position = UDim2.new(0, 10, 0, 0)
+        label.Size = UDim2.new(1, -55, 1, 0)
+        label.Position = UDim2.new(0, 12, 0, 0)
         label.BackgroundTransparency = 1
         label.Text = text
-        label.TextColor3 = Color3.fromRGB(220, 220, 220)
+        label.TextColor3 = Theme.Text
         label.TextXAlignment = Enum.TextXAlignment.Left
         label.Font = Enum.Font.Gotham
         label.TextSize = 13
         label.Parent = frame
 
         local track = Instance.new("Frame")
-        track.Size = UDim2.new(0, 40, 0, 20)
-        track.Position = UDim2.new(1, -50, 0.5, -10)
-        track.BackgroundColor3 = toggled and Color3.fromRGB(84, 101, 255) or Color3.fromRGB(100, 100, 100)
+        track.Size = UDim2.new(0, 38, 0, 18)
+        track.Position = UDim2.new(1, -50, 0.5, -9)
+        track.BackgroundColor3 = toggled and Theme.Accent or Theme.ToggleOff
         track.BorderSizePixel = 0
         track.Parent = frame
         Instance.new("UICorner", track).CornerRadius = UDim.new(1, 0)
 
         local indicator = Instance.new("Frame")
-        indicator.Size = UDim2.new(0, 16, 0, 16)
-        indicator.Position = toggled and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
+        indicator.Size = UDim2.new(0, 14, 0, 14)
+        indicator.Position = toggled and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7)
         indicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         indicator.BorderSizePixel = 0
         indicator.Parent = track
@@ -255,8 +284,8 @@ function Window:CreateTab(title)
 
         clickDetector.MouseButton1Click:Connect(function()
             toggled = not toggled
-            track.BackgroundColor3 = toggled and Color3.fromRGB(84, 101, 255) or Color3.fromRGB(100, 100, 100)
-            indicator.Position = toggled and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
+            track.BackgroundColor3 = toggled and Theme.Accent or Theme.ToggleOff
+            indicator.Position = toggled and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7)
             callback(toggled)
         end)
     end
@@ -267,28 +296,28 @@ function Window:CreateTab(title)
         local isDraggingSlider = false
         
         local container = Instance.new("Frame")
-        container.Size = UDim2.new(1, 0, 0, 45)
-        container.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        container.Size = UDim2.new(1, 0, 0, 48)
+        container.BackgroundColor3 = Theme.Elements
         container.BorderSizePixel = 0
         container.LayoutOrder = tabData.layoutOrder
         container.Parent = page
-        Instance.new("UICorner", container).CornerRadius = UDim.new(0, 6)
+        Instance.new("UICorner", container).CornerRadius = UDim.new(0, 7)
 
         local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, -20, 0, 20)
-        label.Position = UDim2.new(0, 10, 0, 2)
+        label.Size = UDim2.new(1, -20, 0, 22)
+        label.Position = UDim2.new(0, 12, 0, 2)
         label.BackgroundTransparency = 1
         label.Text = text .. ": " .. tostring(currentValue)
-        label.TextColor3 = Color3.fromRGB(220, 220, 220)
+        label.TextColor3 = Theme.Text
         label.TextXAlignment = Enum.TextXAlignment.Left
         label.Font = Enum.Font.Gotham
-        label.TextSize = 13
+        label.TextSize = 12
         label.Parent = container
 
         local track = Instance.new("Frame")
-        track.Size = UDim2.new(1, -20, 0, 6)
-        track.Position = UDim2.new(0, 10, 0, 32)
-        track.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        track.Size = UDim2.new(1, -24, 0, 6)
+        track.Position = UDim2.new(0, 12, 0, 34)
+        track.BackgroundColor3 = Theme.ToggleOff
         track.BorderSizePixel = 0
         track.Parent = container
         Instance.new("UICorner", track).CornerRadius = UDim.new(1, 0)
@@ -296,7 +325,7 @@ function Window:CreateTab(title)
         local fill = Instance.new("Frame")
         local pct = (currentValue - min) / (max - min)
         fill.Size = UDim2.new(pct, 0, 1, 0)
-        fill.BackgroundColor3 = Color3.fromRGB(84, 101, 255)
+        fill.BackgroundColor3 = Theme.Accent
         fill.BorderSizePixel = 0
         fill.Parent = track
         Instance.new("UICorner", fill).CornerRadius = UDim.new(1, 0)
